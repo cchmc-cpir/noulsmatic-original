@@ -26,7 +26,10 @@ except AttributeError:
 class Ui_MainWidget(object):
     def setupUi(self, MainWidget):
         MainWidget.setObjectName(_fromUtf8("MainWidget"))
-        MainWidget.resize(791, 688)
+        #PJN Change the size of the MainWidget
+        MainWidget.resize(800, 1200)
+        #PJN Move the widget to the right side of the screen
+        MainWidget.move(800,35)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)

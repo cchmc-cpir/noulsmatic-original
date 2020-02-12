@@ -35,7 +35,8 @@ io.output(Trigger,1)
 class MyApp(Tk):
     global tk
     tk = Tk()
-    tk.geometry("1200x800")
+    #PJN edit size of application
+    tk.geometry("800x1200")
     tk.configure(background='white')
 
 
@@ -51,81 +52,97 @@ class MyApp(Tk):
         photo=ImageTk.PhotoImage(image)
         label=Label(image=photo)
         label.image=photo
-        label.grid(row=59, column=1)
-
+        label.grid(row=1, column=1)
+#PJN try a different method of placing this that might be better
+        #label.place(relx=0.25,rely=0.05)
         # Setting breath rate
-        Label(tk,text="Breath Rate (Br/min)",fg="blue",bg="white",font=('Arial',10,'bold')).grid(
-            row=45, column =1,pady=20)
-        tk.BrRate_var=StringVar(tk,value='100')
+        Label(tk,text="Breath Rate (Br/min)",fg="blue",bg="white",font=('Arial',12,'bold')).grid(
+            row=45, column =1,pady=10)
+        #PJN Change method of setting location to make this prettier
+        #Label(tk,text="Breath Rate (Br/min)",fg="blue",bg="white",font=('Arial',10,'bold')).place(
+        #    relx=0.1, rely = 0.25)
+        #PJN change default breath rate from 100 to 80
+        tk.BrRate_var=StringVar(tk,value='80')
         tk.BrRate_var.trace("w",self.callback)
         tk.BrRate=Entry(tk,textvariable=tk.BrRate_var,state='normal',disabledforeground="red")
         tk.BrRate.grid(row=46, column =1)
         tk.BrRate.bind('<Return>',self.variableupdt)
-        tk.submit_button=Button(tk,text="Get Single Breath Duration",fg="blue",bg="white",font=('Arial',12,'bold'),
+        tk.submit_button=Button(tk,text="Get Single Breath Duration",fg="black",bg="white",font=('Arial',12,'bold'),
                             command=self.calc_breathduration).grid(
-                                row=48, column =1,pady=10)
+                                row=47, column =1,pady=10)
+        #PJN Change Location to make this prettier
+      #  tk.submit_button=Button(tk,text="Get Single Breath Duration",fg="blue",bg="white",font=('Arial',12,'bold'),
+       #                     command=self.calc_breathduration).place(
+        #                        relx=0.1, rely=0.28)
     
         # Setting inhalation duration
-        Label(tk,text="Inhalation Duration (msec)",fg="blue",bg="white",font=('Arial',10,'bold')).grid(
-            row=50, column =1,pady=10)
-        tk.InDuration_var=StringVar(tk,value='150')
+        Label(tk,text="Inhalation Duration (msec)",fg="blue",bg="white",font=('Arial',12,'bold')).grid(
+            row=49, column =1,pady=10)
+        #PJN try a different method of placing this that might be better
+        #Label(tk,text="Inhalation Duration (msec)",fg="blue",bg="white",font=('Arial',10,'bold')).place(
+        #    relx=0.1, rely = 0.32)
+        #PJN change default value from 150 to 200
+        tk.InDuration_var=StringVar(tk,value='200')
         tk.InDuration_var.trace("w",self.callback)
         tk.InDuration=Entry(tk,textvariable=tk.InDuration_var,state='normal',disabledforeground="red")
         tk.InDuration.bind('<Return>',self.variableupdt)
-        tk.InDuration.grid(row=51, column =1)
+        tk.InDuration.grid(row=50, column =1)
+        #PJN Change method of placing this to make this prettier
+        #tk.InDuration.place(relx=0.1, rely =0.35)
 
         # Setting breath hold duration
-        Label(tk,text="Breath Hold Duration (msec)",fg="blue",bg="white",font=('Arial',10,'bold')).grid(
-            row=52, column =1,pady=10)
-        tk.BrHold_var=StringVar(tk,value='150')
+        Label(tk,text="Breath Hold Duration (msec)",fg="blue",bg="white",font=('Arial',12,'bold')).grid(
+            row=51, column =1,pady=10)
+        #PJN Change Default Breathhold from 150 to 200
+        tk.BrHold_var=StringVar(tk,value='200')
         tk.BrHold_var.trace("w",self.callback)
         tk.BrHold=Entry(tk,textvariable=tk.BrHold_var,state='normal',disabledforeground="red")
         tk.BrHold.bind('<Return>',self.variableupdt)
-        tk.BrHold.grid(row=53, column =1)
+        tk.BrHold.grid(row=52, column =1)
 
-
+#PJN Change column from 2 to 1 for the "Freeze Breath Parameters Button
         tk.vari=IntVar()
-        Checkbutton(tk, text="Freeze Breath Parameters",variable=tk.vari,fg="Red",bg="white",font=('Arial',10,'bold'),
+        Checkbutton(tk, text="Freeze Breath Parameters",variable=tk.vari,fg="black",bg="white",font=('Arial',12,'bold'),
                     command=self.nancheck).grid(
-                        row=53, column =2,padx=20,pady=20)
+                        row=55, column =1,padx=20,pady=20)
 
   
 
-        submit_button=Button(tk,text="Get Exhalation Duration",fg="blue",bg="white",font=('Arial',10,'bold'),
+        submit_button=Button(tk,text="Get Exhalation Duration",fg="black",bg="white",font=('Arial',12,'bold'),
                          command=self.calc_exhalation).grid(
-                             row=54, column =1,pady=10)
+                             row=53, column =1,pady=10)
         
 
-        Label(tk,text="Trigger delay (msec)",fg="blue",bg="white",font=('Arial',10,'bold')).grid(
-            row=48, column =10,padx=20,pady=10)
-        tk.Trig_var=StringVar(tk,value='5')
+        Label(tk,text="Trigger delay (msec)",fg="Red",bg="white",font=('Arial',12,'bold')).grid(
+            row=45, column =3,padx=20,pady=10)
+        tk.Trig_var=StringVar(tk,value='250')
         tk.Trig_var.trace("w",self.callback)
         tk.Trig=Entry(tk,textvariable=tk.Trig_var)
         tk.Trig.bind('<Return>',self.variableupdt)
-        tk.Trig.grid(row=49, column =10,padx=20)
+        tk.Trig.grid(row=46, column =3,padx=20)
         
 
-        Label(tk,text="Trigger length(msec)",fg="blue",bg="white",font=('Arial',10,'bold')).grid(
-            row=50, column =10,padx=20,pady=10)
+        Label(tk,text="Trigger length(msec)",fg="Red",bg="white",font=('Arial',12,'bold')).grid(
+            row=47, column =3,padx=20,pady=10)
         tk.TrigL_var=StringVar(tk,value='10')
         tk.TrigL_var.trace("w",self.callback)
         tk.TrigL=Entry(tk,textvariable=tk.TrigL_var)
         tk.TrigL.bind('<Return>',self.variableupdt)
-        tk.TrigL.grid(row=51, column =10,padx=20)
+        tk.TrigL.grid(row=48, column =3,padx=20)
         
 
 
         tk.var=IntVar()
-        Checkbutton(tk, text="Trigger1",variable=tk.var,fg="Red",bg="white",font=('Arial',10,'bold'),onvalue=1,
+        Checkbutton(tk, text="Trigger1",variable=tk.var,fg="Red",bg="white",font=('Arial',12,'bold'),onvalue=1,
                     command=self.cb,offvalue=0).grid(
-                        row=48, column =12,padx=20,pady=20)
+                        row=49, column =3,padx=20,pady=10)
         
 
-        StartN2=Button(tk,text="Start",fg="Blue",bg="white",font=('Arial',12,'bold'),
-                       command=self.startN2).grid(row=49, column =12,padx=10,pady=10)
+        StartN2=Button(tk,text="Start",fg="Black",bg="green",font=('Arial',20,'bold'),
+                       command=self.startN2).grid(row=56, column =2,padx=10,pady=10)
         
-        StopN2=Button(tk,text="Stop",fg="Blue",bg="white",font=('Arial',12,'bold'),
-                      command=self.stopN2).grid(row=51, column =12,padx=20,pady=10)
+        StopN2=Button(tk,text="Stop",fg="Black",bg="Red",font=('Arial',20,'bold'),
+                      command=self.stopN2).grid(row=57, column =2,padx=20,pady=10)
 
         #ResetParameters=Button(tk,text="Reset Parameters",fg="black",bg="green",font=('Arial',12,'bold'),
                                #command=self.resetParameters).grid(row=55,column=2,padx=10,pady=10)
@@ -133,14 +150,14 @@ class MyApp(Tk):
        # ResetTrigger=Button(tk,text="Reset Trigger",fg="Green",bg="white",font=('Arial',12,'bold'),command=self.resetTrigger).grid(row=50,column=12,padx=10,pady=10)
        
 
-        Xnuc=Button(tk,text="X-Nuclei",bg="yellow",font=('Arial',12,'bold'),
-                    command=self.startHP).grid(row=55, column =10,padx=20,pady=20)
+        Xnuc=Button(tk,text="X-Nuclei",bg="yellow",font=('Arial',20,'bold'),
+                    command=self.startHP).grid(row=56, column =3,padx=20,pady=20)
         
-        n2=Button(tk,text="Nitrogen",fg="white",bg="black",font=('Arial',12,'bold'),
-                  command=self.runn2).grid(row=55, column =12,padx=20,pady=20)
+        n2=Button(tk,text="Nitrogen",fg="white",bg="black",font=('Arial',20,'bold'),
+                  command=self.runn2).grid(row=57, column =3,padx=20,pady=20)
     
 
-        Exit=Button(tk,text="Exit",bg="red",font=('Arial',12,'bold'),command=self.terminate).grid(row=0, column =30,padx=10,pady=10)
+        Exit=Button(tk,text="Exit",bg="red",font=('Arial',12,'bold'),command=self.terminate).grid(row=100, column =30,padx=10,pady=10)
 
 
     def callback(self, *args):
@@ -176,7 +193,7 @@ class MyApp(Tk):
         breaths=float(tk.BrRate_var.get())
         rateperiod=float(60) #1 min in sec
         singleduration=float(rateperiod/breaths)
-        labelresult=Label(tk,text="Breath Duration =  %g  sec" %singleduration,bg="white",font=('Arial',12,'bold')).grid(row=1, column =10)
+        labelresult=Label(tk,text="Breath Duration =  %g  sec" %singleduration,bg="white",font=('Arial',12,'bold')).grid(row=48, column =1)
         return singleduration
 
     def calc_exhalation(self):
@@ -186,7 +203,7 @@ class MyApp(Tk):
         rateperiod=float(60) #1 min in sec
         singleduration=float(rateperiod/breaths)
         Exhalation=float(singleduration-(Inhalation+Hold))
-        labelresult=Label(tk,text="Exhalation Duration = %g  sec" %Exhalation,bg="white",font=('Arial',12,'bold')).grid(row=2, column =10)
+        labelresult=Label(tk,text="Exhalation Duration = %g  sec" %Exhalation,bg="white",font=('Arial',12,'bold')).grid(row=54, column =1)
         return Exhalation
 
     def TrigInhal(self):
@@ -304,13 +321,16 @@ class MyApp(Tk):
         gas=N2     
         self.threadsup()
         self.event.clear()
-        print ("N2 starting")
+        #print ("N2 starting")
+        labelresult=Label(tk,text="Ventilating with N2/O2",fg="red",bg="white",font=('Arial',18,'bold')).grid(row=58, column =1)
+        
   
 
     def stopN2(self):
         global tN2, trig, Hp, running
         io.output(N2,0)
         self.event.set()
+        labelresult=Label(tk,text="   Ventilation Stopped   ",bg="white",font=('Arial',18,'bold')).grid(row=58, column =1)
 
     def resetParameters(self):
         global gas, Inhalation, Hold, breaths, rateperiod, singleduration, Exhalation, triggerdelay, triglen
@@ -342,7 +362,8 @@ class MyApp(Tk):
         triglen=float(tk.TrigL_var.get())/1000
         io.output(N2,0)
         gas=HP
-        print ("Hp starting")
+        #print ("Hp starting")
+        labelresult=Label(tk,text="Ventilating with Xe/O2",fg="green",bg="white",font=('Arial',18,'bold')).grid(row=58, column =1)
         #self.threadsup()
         self.event.clear()
         #print ("N2 starting")
@@ -352,8 +373,8 @@ class MyApp(Tk):
         global gas
         io.output(HP,0)
         gas=N2
-        print ("N2 starting")
-        
+        #print ("N2 starting")
+        labelresult=Label(tk,text="Ventilating with N2/O2",fg="red",bg="white",font=('Arial',18,'bold')).grid(row=58, column =1)
     
     def terminate(self):
         io.output(O2,0)
