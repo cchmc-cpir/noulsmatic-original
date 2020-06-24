@@ -292,7 +292,14 @@ class MyApp(Tk):
             breath=threading.Thread(target=self.choosetrigcycle)
             breath.start()
                     
-                       
+     def switchbutton(self): #MC 6/24/2020 function to disable/enable button
+         if StartN2["state"] == "normal"
+            StartN2["state"] = "disabled"
+            StartN2["bg"] = "gray"
+         else
+            StartN2["state"] = "normal"
+            StartN2["state"] = "green" 
+    
     def startN2(self):
         global gas, running
         io.output(O2,0)
@@ -304,13 +311,14 @@ class MyApp(Tk):
         gas=N2     
         self.threadsup()
         self.event.clear()
+        self.switchbutton()
         print ("N2 starting")
-  
 
     def stopN2(self):
         global tN2, trig, Hp, running
         io.output(N2,0)
         self.event.set()
+        self.switchbutton() 
 
     def resetParameters(self):
         global gas, Inhalation, Hold, breaths, rateperiod, singleduration, Exhalation, triggerdelay, triglen
