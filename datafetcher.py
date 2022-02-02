@@ -6,6 +6,7 @@ import csv
 import spidev
 import RPi.GPIO as GPIO
     
+    
 class TimedDataFetcher:
   def __init__(self, fetchperiod):
     self.start_time = time.time()
@@ -49,15 +50,25 @@ class TimedDataFetcher:
     spi.open(0,0)
     #adc = self.spi.xfer2([1,(8+channel)<<4,0]) 
     adc=spi.xfer2([1,(8+channel)<<4,0])
+    #print("adc = %f",adc)
     data=((adc[1]&3) << 8) + adc[2]
+    #print("data = %f", data)
+    #p1=(((data*5000)/float(1023))*0.3)/5000
+    #print("p1 = %f",p1)
     spi.close()
+    #GPIO.setmode(GPIO.BCM)
+    #GPIO.setup(channel, GPIO.IN)
+    #test = GPIO.input(channel)
+    #print("test = %f",test)
+    #PJN change data to p1
     return data
     #GPIO.setmode(GPIO.BCM)
     #GPIO.setup(channel, GPIO.IN)
     #GPIO.add_event_detect(channel, CIP.BOTH, callback=self.getDataFromChannel, bouncetime=1)
     # adc=((adc[1]&3)<<8)+adc[2]
     # return ((adc[1]&3) << 8) + adc[2]
-    # p1=(((adc*5000)/float(1023))*0.3)/5000
+   # p1=(((adc*5000)/float(1023))*0.3)/5000
+   # print("p1 = %f",p1)
     # pressure=((p1)/0.01422)-1.79
     # pressure=round(pressure,4)
     # return pressure
@@ -71,7 +82,9 @@ class TimedDataFetcher:
     
       # Fetch new data
       # canula = self.getDataFromChannel(0)
+      # channel 7 was the original
       canula=self.getDataFromChannel(7)
+      #print("Canula Value = %f",canula)
       #canula=canula*0.02-14# 161228 Calibration this is for ventilator 1.0
       #canula=(canula-70)*0.02
       
@@ -84,6 +97,8 @@ class TimedDataFetcher:
       #GPIO.setup(7,GPIO.IN)
       #canula=GPIO.input(7)
       #canula=canula*1;
+      
+      #print("canula = %f",canula)
       
       # Add data to buffer and increment index under lock
       self.indexLock.acquire()

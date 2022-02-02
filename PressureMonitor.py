@@ -20,6 +20,7 @@ class Reader:
         def ConvertVolts(self,level,places):
                 volts=((data*5000)/float(1023))-500.62 #this is for ventilator 1.0
                 volts=round(volts,places)
+                #print (" pressure voltage: %f",volts))
                 return volts
         def ConvertPressure(self,level,places):
                 pressure = (((level*5000)/float(1023))*0.3)/5000

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name="Ventilator Software V3"
+Icon=/home/pi/Desktop/WIP_noulsmatic_v3/Stock_Mouse.png
+Comment="Desktop Shortcut to run Mouse Ventillator"
+Type=Application
+Categories=None
+Exec=lxterminal -t "Opening Ventilator Software" --working-directory=/home/pi/Desktop/WIP_noulsmatic_v3/ -e ./noulsmatic_startup.sh
+StartupNotify=false
+Name[en_US]=Ventilator Software V3

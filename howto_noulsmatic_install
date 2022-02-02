@@ -1,0 +1,27 @@
+in the command line, type:
+
+sudo apt-get install python-imaging-tk
+sudo apt-get install qt4-dev-tools
+sudo apt-get install python-qt4
+pip install pyqtgraph
+
+
+Then, go into the raspberry pi's configuration settings by typing
+
+sudo raspi-config
+-Navigate to option 5 Interfacing Options
+-Navigate to P4 SPI
+-Select yes to enable SPI
+
+Move the noulsmatic_startup.sh file to the Desktop and type into the terminal
+sudo chmod +x noulsmatic_startup.sh
+
+Alternatively, move the text file "Ventilator Software" to the Desktop, where it should become a launcher
+
+If you do this, make noulsmatic_startup.sh executable by navigating to the noulsmatic folder in the terminal and typing the chmod line
+
+*****To get respiratory monitoring to work right*****
+There's a file that, when it runs causes something to be set correctly in the pi and read the pressure transducer correctly. This needs a few modules
+
+Type into the terminal:
+pip3 install adafruit-circuitpython-mcp3xxx
