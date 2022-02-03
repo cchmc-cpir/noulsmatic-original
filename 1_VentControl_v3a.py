@@ -142,7 +142,7 @@ class MyApp(Tk):
         
 
         StartN2=Button(tk,text="Start",fg="Black",bg="green",font=('Arial',20,'bold'),
-                       command=self.startN2).grid(row=55, column =2,padx=10,pady=10) #MC tag
+                       command=lambda:[self.startN2,self.disableN2button]).grid(row=55, column =2,padx=10,pady=10) #MC tag
         
         StopN2=Button(tk,text="Stop",fg="Black",bg="Red",font=('Arial',20,'bold'),
                       command=self.stopN2).grid(row=56, column =2,padx=20,pady=10)
@@ -490,14 +490,19 @@ class MyApp(Tk):
             breath=threading.Thread(target=self.choosetrigcycle)
             breath.start()
         
-    def switchbutton(self): #tag
-        if (self.StartN2['state'] == tk.NORMAL):
-            self.StartN2['state'] = tk.DISABLED
-            self.StartN2['bg'] = 'gray'
-        else:
-            self.StartN2['state'] = tk.NORMAL
-            self.StartN2['state'] = 'green'   
-                       
+    #def switchbutton(self): #tag
+    #    if (self.StartN2['state'] == tk.NORMAL):
+    #        self.StartN2['state'] = tk.DISABLED
+    #        self.StartN2['bg'] = 'gray'
+    #    else:
+    #        self.StartN2['state'] = tk.NORMAL
+    #        self.StartN2['state'] = 'green'   
+
+    def disableN2button(self):
+        self.startN2['state'] = tk.DISABLED
+        self.stopN2['state']  = tk.NORMAL
+
+
     def startN2(self):
         global gas, running, WIO
         io.output(O2,0)
