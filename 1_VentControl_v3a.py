@@ -142,10 +142,10 @@ class MyApp(Tk):
         
 
         StartN2=Button(tk,text="Start",fg="Black",bg="green",font=('Arial',20,'bold'),
-                       command=lambda:[self.startN2,self.disableN2button]).grid(row=55, column =2,padx=10,pady=10) #MC tag
+                       command=lambda:[self.startN2,self.N2buttonpress]).grid(row=55, column =2,padx=10,pady=10) #MC tag
         
         StopN2=Button(tk,text="Stop",fg="Black",bg="Red",font=('Arial',20,'bold'),
-                      command=self.stopN2).grid(row=56, column =2,padx=20,pady=10)
+                      command=lambda:[self.stopN2,self.Stopbuttonpress]).grid(row=56, column =2,padx=20,pady=10)
 
         #ResetParameters=Button(tk,text="Reset Parameters",fg="black",bg="green",font=('Arial',12,'bold'),
                                #command=self.resetParameters).grid(row=55,column=2,padx=10,pady=10)
@@ -498,10 +498,14 @@ class MyApp(Tk):
     #        self.StartN2['state'] = tk.NORMAL
     #        self.StartN2['state'] = 'green'   
 
-    def disableN2button(self):
+    def N2buttonpress(self):
         self.startN2['state'] = tk.DISABLED
         self.stopN2['state']  = tk.NORMAL
 
+
+    def Stopbuttonpress(self):
+        self.startN2['state'] = tk.NORMAL
+        self.stopN2['state']  = tk.DISABLED
 
     def startN2(self):
         global gas, running, WIO
