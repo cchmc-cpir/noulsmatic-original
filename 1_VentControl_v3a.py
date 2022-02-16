@@ -45,7 +45,8 @@ class MyApp(Tk):
     def __init__(self): 
         self.my_widgets()
         self.event= threading.Event()
-        
+        self.IKEDEBUGMODE = 1
+        self.LABELTOGGLE = 0
         
     # All GUI entry and building
     def my_widgets(self):
@@ -140,12 +141,14 @@ class MyApp(Tk):
                     command=self.cb,offvalue=0).grid(
                         row=49, column =3,padx=20,pady=10)
         
-
-        StartN2=Button(tk,text="Start",fg="Black",bg="green",font=('Arial',20,'bold'),
-                       command=lambda:[self.startN2,self.N2buttonpress]).grid(row=55, column =2,padx=10,pady=10) #MC tag
         
-        StopN2=Button(tk,text="Stop",fg="Black",bg="Red",font=('Arial',20,'bold'),
-                      command=lambda:[self.stopN2,self.Stopbuttonpress]).grid(row=56, column =2,padx=20,pady=10)
+        tk.StartVent=Button(tk,text="Start",fg="Black",bg="green",font=('Arial',20,'bold'),state='normal',
+                       command=self.startvent)
+        tk.StartVent.grid(row=55, column =2,padx=10,pady=10) #MC tag
+
+        tk.StopVent=Button(tk,text="Stop",fg="Black",bg="Red",font=('Arial',20,'bold'), state='normal',
+                      command=self.stopvent)
+        tk.StopVent.grid(row=56, column =2,padx=20,pady=10)
 
         #ResetParameters=Button(tk,text="Reset Parameters",fg="black",bg="green",font=('Arial',12,'bold'),
                                #command=self.resetParameters).grid(row=55,column=2,padx=10,pady=10)
@@ -175,12 +178,13 @@ class MyApp(Tk):
         tk.NWashout.bind('<Return>',self.variableupdt)
         tk.NWashout.grid(row=61, column =1)
         
-        tk.Washinout=Button(tk,text="Start Wash in/out",fg="Black",bg="cyan",state='disabled',font=('Arial',20,'bold'),
-                       command=self.startwashinout)
-        tk.Washinout.grid(row=57, column =3,padx=10,pady=10)
+        tk.StartWIWO=Button(tk,text="Start Wash in/out",fg="Black",bg="cyan",state='disabled',font=('Arial',20,'bold'),
+                       command=self.startwiwo)
+        tk.StartWIWO.grid(row=57, column =3,padx=10,pady=10)
 
-        Xnuc=Button(tk,text="X-Nuclei",bg="yellow",font=('Arial',20,'bold'),
-                    command=self.startHP).grid(row=55, column =3,padx=20,pady=20)
+        tk.StartHP=Button(tk,text="X-Nuclei",bg="yellow",font=('Arial',20,'bold'),state='disabled',
+                    command=self.starthp)
+        tk.StartHP.grid(row=55, column =3,padx=20,pady=20)
         
       #  tk.WIO_var=StringVar(tk,value='0')
       # tk.WIO_var.trace("w",self.callback)
@@ -188,12 +192,12 @@ class MyApp(Tk):
       #  tk.WIO.bind('<Return>',self.variableupdt)
       #  tk.WIO.grid(row=57, column =2)
         
-        n2=Button(tk,text="Nitrogen",fg="white",bg="black",font=('Arial',20,'bold'),
-                  command=self.runn2).grid(row=56, column =3,padx=20,pady=20)
+        tk.StartN2=Button(tk,text="Nitrogen",fg="white",bg="black", state='disabled',font=('Arial',20,'bold'),
+                  command=self.startn2)
+        tk.StartN2.grid(row=56, column =3,padx=20,pady=20)
     
 
         Exit=Button(tk,text="Exit",bg="red",font=('Arial',12,'bold'),command=self.terminate).grid(row=100, column =3,padx=10,pady=10)
-
 
     def callback(self, *args):
         print "Variable Change!"
@@ -228,11 +232,12 @@ class MyApp(Tk):
           if tk.wiocb.get() == 0:
               tk.NWashout.configure(state='disabled')
               tk.NWashin.configure(state='disabled')
-              tk.Washinout.configure(state='disabled')
+              tk.StartWIWO.configure(state='disabled')
           else:
               tk.NWashin.configure(state='normal')
               tk.NWashout.configure(state='normal')
-              tk.Washinout.configure(state='normal')    
+              if self.LABELTOGGLE == 1:
+                  tk.StartWIWO.configure(state='normal')    
         
     def cb(self):
         print "trigger is", tk.var.get()   
@@ -467,6 +472,11 @@ class MyApp(Tk):
          global gas, Inhalation, Hold, breaths, rateperiod, singleduration, Exhalation, triggerdelay, triglen, WashIn, WashOut, WIO
          #while not self.event.is_set():
          if (triggerdelay >= Inhalation) and ((triggerdelay + triglen)<=(Inhalation+Hold)): #using less than or equal to allows imaging at end br hold              
+             if self.IKEDEBUGMODE ==1:
+                 print "triggerdelay = "+str(triggerdelay)
+                 print "triglen = "+str(triglen)
+                 print "Inhalation = "+str(Inhalation)
+                 print "Hold = "+str(Hold)
              print "trigger in hold"               
              self.triggerhold()
          elif ((triggerdelay+triglen)<=Inhalation): #using less than or equal to allows imaging at end inhalation
@@ -489,25 +499,9 @@ class MyApp(Tk):
         else:
             breath=threading.Thread(target=self.choosetrigcycle)
             breath.start()
-        
-    #def switchbutton(self): #tag
-    #    if (self.StartN2['state'] == tk.NORMAL):
-    #        self.StartN2['state'] = tk.DISABLED
-    #        self.StartN2['bg'] = 'gray'
-    #    else:
-    #        self.StartN2['state'] = tk.NORMAL
-    #        self.StartN2['state'] = 'green'   
+    
 
-    def N2buttonpress(self):
-        self.startN2['state'] = tk.DISABLED
-        self.stopN2['state']  = tk.NORMAL
-
-
-    def Stopbuttonpress(self):
-        self.startN2['state'] = tk.NORMAL
-        self.stopN2['state']  = tk.DISABLED
-
-    def startN2(self):
+    def startvent(self):
         global gas, running, WIO
         io.output(O2,0)
         io.output(N2,0)
@@ -519,20 +513,35 @@ class MyApp(Tk):
         gas=N2
         WIO=0
         self.threadsup()
-        self.event.clear()
         #self.switchbutton()
         #print ("N2 starting")
+        self.LABELTOGGLE =1
+        #if self.LABELTOGGLE == 1:
         labelresult=Label(tk,text="Ventilating with N2/O2!",fg="red",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
+        tk.StartVent.configure(state='disabled')
+        tk.StartHP.configure(state='normal')
+        tk.StartN2.configure(state='disabled')
+        if tk.wiocb.get() == 1:
+            tk.StartWIWO.configure(state='normal')
+        self.event.clear()
+        #tk.StopVent.configure(state='normal')
 
 
-    def stopN2(self):
+    def stopvent(self):
         global tN2, trig, Hp, running, WIO
         io.output(N2,0)
         #tk.WIO_var.set(value='0')
         WIO = 0
         self.event.set()
         labelresult=Label(tk,text="   Ventilation Stopped!   ",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
+        tk.StartVent.configure(state='normal')
+        tk.StartHP.configure(state='disabled')
+        tk.StartN2.configure(state='disabled')
+        tk.StartWIWO.configure(state='disabled')
         
+        self.LABELTOGGLE = 0
+
+
 
     def resetParameters(self):
         global gas, Inhalation, Hold, breaths, rateperiod, singleduration, Exhalation, triggerdelay, triglen, WashIn, WashOut, WIO
@@ -555,7 +564,7 @@ class MyApp(Tk):
         triggerdelay=float(tk.Trig_var.get())/1000
         triglen=float(tk.TrigL_var.get())/1000
     
-    def startHP(self):
+    def starthp(self):  #"start HP"
         global gas, running, Inhalation, Hold, breaths, rateperiod, singleduration, Exhalation, triggerdelay, triglen, WashIn, WashOut, WIO
         Inhalation=float(tk.InDuration_var.get())/1000
         Hold=float(tk.BrHold_var.get())/1000
@@ -572,12 +581,18 @@ class MyApp(Tk):
         io.output(N2,0)
         gas=HP
         #print ("Hp starting")
-        labelresult=Label(tk,text="Ventilating with Xe/O2!",fg="green",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
+        if self.LABELTOGGLE == 1:
+            labelresult=Label(tk,text="Ventilating with Xe/O2!",fg="green",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
         #self.threadsup()
         self.event.clear()
         #print ("N2 starting")
+        tk.StartHP.configure(state='disable')
+        tk.StartN2.configure(state='normal')
+        if tk.wiocb.get() == 1:
+            tk.StartWIWO.configure(state='normal')
+        
    #PJN function to do washin-washout       
-    def startwashinout(self):
+    def startwiwo(self):  #"wash in wash out"
         global gas, running, Inhalation, Hold, breaths, rateperiod, singleduration, Exhalation, triggerdelay, triglen, WashIn, WashOut, WIO
         Inhalation=float(tk.InDuration_var.get())/1000
         Hold=float(tk.BrHold_var.get())/1000
@@ -594,12 +609,16 @@ class MyApp(Tk):
         #io.output(N2,0)
         #gas=WIO
         #print ("Hp starting")
-        labelresult=Label(tk,text="   Wash in/Wash Out   ",fg="cyan",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
+        labelresult=Label(tk,text="    Wash in/Wash Out    ",fg="cyan",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
         #self.threadsup()
         self.event.clear()
+        tk.StartHP.configure(state='normal')
+        tk.StartN2.configure(state='normal')
+        tk.StartWIWO.configure(state='disabled')
+        
         #print ("N2 starting")
         
-    def runn2(self): 
+    def startn2(self): 
         global gas, WIO
         io.output(HP,0)
         #tk.WIO_var.set(value='0')
@@ -607,8 +626,13 @@ class MyApp(Tk):
         gas=N2
         #print ("N2 starting")
         #self.switchbutton() #tag MC
-        labelresult=Label(tk,text="Ventilating with N2/O2!",fg="red",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
-    
+        if self.LABELTOGGLE == 1:
+            labelresult=Label(tk,text="Ventilating with N2/O2!",fg="red",bg="white",font=('Arial',24,'bold')).grid(row=58, column =3)
+        tk.StartN2.configure(state='disabled')
+        tk.StartHP.configure(state='normal')
+        if tk.wiocb.get() == 1:
+            tk.StartWIWO.configure(state='normal')
+                
     def terminate(self):
         io.output(O2,0)
         io.output(N2,0)
